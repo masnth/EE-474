@@ -11,7 +11,7 @@ void setup(void) {
   pinMode(green, OUTPUT);
   pinMode(blue, OUTPUT);
   Serial.begin(9600);
-  myTimer.begin(blinkLED, 2600000);  // blinkLED to run every 0.15 seconds // call this every x second
+  myTimer.begin(blinkLED, 5100000);  // blinkLED to run every 0.15 seconds // call this every x second
 }
 
 // The interrupt will blink the LED, and keep
@@ -22,35 +22,39 @@ unsigned long startTime = 0;
 int colorCode = 0;
 int ledState = LOW;
 volatile unsigned long blinkCount = 0; // use volatile for shared variables
-float vol2;
+float val2;
 
 // functions called by IntervalTimer should be short, run as quickly as
 // possible, and should avoid calling other functions if possible.
 void blinkLED(void) {  
   val = analogRead(2);
-  val2 = value * (10.0 / 1023.0); 
+  val2 = val * (10.0 / 1023.0); 
   Serial.print("analog 2 is: ");
   Serial.println(val);
-  int x = 1;
-  for (int i = 0; i > -1; i = i + x){
+  int x = -1;
+  for (int i = 255; i < 256; i = i + x){
     ledState = i;
-    if (i == 255) {
+    if (i == 0) {
     blinkCount = blinkCount + 1;  // increase when LED turns on //// switch direction at peak
-    x = -1;  
+    x = 1;  
     } 
     delay(val2); //delay 5ms each increment, 5*255=1275ms
     switch(colorCode){
       case 0: analogWrite(red, ledState);
-              digitalWrite(blue, HIGH);
-              digitalWrite(green, HIGH);
+              analogWrite(blue, 255);
+              analogWrite(green, 255);
               break;
       case 1: analogWrite(green, ledState);
-              digitalWrite(red, HIGH);
-              digitalWrite(blue, HIGH);
+              analogWrite(blue, 255);
+              analogWrite(red, 255);
               break;
       case 2: analogWrite(blue, ledState);
-              digitalWrite(green, HIGH);
-              digitalWrite(red, HIGH);
+              analogWrite(red, 255);
+              analogWrite(green, 255);
+              break;
+      default: analogWrite(blue, 255);
+              analogWrite(red, 255);
+              analogWrite(green, 255);
               break;
     }
   }
@@ -74,4 +78,3 @@ void loop(void) {
   Serial.println(blinkCopy);
   delay(500);
 }
-

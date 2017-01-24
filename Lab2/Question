@@ -4,10 +4,10 @@ Question 1: What starts the timer running?
   IntervalTimer Object.
   
 Question 2: What function executes when the timer interrupt occurs?
-  - The function "myTimer.begin(blinkLED, 150000)" is executed when the timer interrupt occurs.
+  - The function "blinkLED" is executed when the timer interrupt occurs.
 
 Question 3: What section of the code is interrupted by the timer interrupt?
-  - The section blinkCopy = blinkCount; is interrupted by the timer interrupt. 
+  - The loop() section is interrupted by the timer interrupt. 
   
 Question 4: What is the purpose of the following functions:
 
@@ -16,25 +16,23 @@ Question 4: What is the purpose of the following functions:
  and incoming communication may be ignored. Interrupts can slightly disrupt the timing of code, however, and may be disabled for 
  particularly critical sections of code."
  - In the example code, the noInterrupts is called so that the line "blinkCopy = blinkCount;" can be executed. This line will need certain 
- amount of time to execute. If the time interval is too long, and there is noInterrupts() functions is called, this line can be skipped by 
+ amount of time to execute. If the time interval is too long, and we do not call noInterrupts() to disable interrupt timer, this line can be skipped by 
  the program. 
  
  - interrupts(): According to the Arduino website, "the interrupts function is Interrupts allow certain important tasks to happen
  in the background and are enabled by default. Some functions will not work while interrupts are disabled, and incoming communication 
  may be ignored. Interrupts can slightly disrupt the timing of code, however, and may be disabled for particularly critical sections 
  of code." 
-  - In the example code, the interrupt function is used so that the function blinkLED is called every 0.15 seconds, despite whether
-  or not other part of the code is finished running. Because we call the noInterrupt() function above to execute the blinkCopy = blinkCount;
-  calling the interrupt() function is necessary to make sure the blinkLED function is called on time.
+  - In the example code, the interrupts() function is used so that the function blinkLED is called every 0.15 seconds, despite whether
+  or not other part of the code is finished running. Because we call the noInterrupts() function above to execute the blinkCopy = blinkCount;
+  calling the interrupts() function is necessary to make sure the blinkLED function is called on time.
 
 Question 5: What is the purpose of bypass capacitors? Why might they be useful for this lab? 
   - The purpose of the bypass capacitors is used as a filter to reduce the noise, also known as the AC component of microcontroller circuits.
 
 Question 6: Is the LED affected by the period of the PWM output, or by the duty cycle (on time), or both? Can you run it too fast or too 
 slowly? 
-  - The LED is affected by both the period of the period of the PWM output, and the duty cycle. The reason is because the period is set 
-  by the mytimer.begin function, while the duty cycle is the delay can be set at a fix number, or can be read from the potentialmeter 
-  using the function analogRead().
-  - If the LED is run too fast, there will not be enough time for all colors to fully light up. If the myTimer.begin(blinkLED, 150000) 
-  function is called too fast, and the delay is too long, the blinkLED function will not be executed fully. It will stay at only one
-  color since there is not enough time to run all the color cases in blinkLED function.
+  - The LED is affected mostly by duty cycle. The reason is because how long the LED is turned on will define the brightness of the LED. The LED is brightest at duty cycle equals 100%; it's completely off at 0%.
+  - If the LED runs too fast, there will not be enough time for all colors to fully light up. If the myTimer.begin(blinkLED, xxx) 
+  function is called too fast. If you put delay function in blinkLED and run it too slow, the blinkLED function will not be executed fully. It will stay at only one
+  color since there is no time for loop() function to execute, it is always interrupted by the interrupt timer. However, we can compensate this by not using delay() function. By using millis() and 2 additional variables, we could make sure the code runs fine even if we set delay time too slow.

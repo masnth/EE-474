@@ -32,8 +32,9 @@ Question 5: What is the purpose of bypass capacitors? Why might they be useful f
 
 Question 6: Is the LED affected by the period of the PWM output, or by the duty cycle (on time), or both? Can you run it too fast or too 
 slowly? 
-  - The LED is affected by both the period of the period of the PWM output, and the duty cycle. The reason is because
+  - The LED is affected by both the period of the period of the PWM output, and the duty cycle. The reason is because the period is set 
+  by the mytimer.begin function, while the duty cycle is the delay can be set at a fix number, or can be read from the potentialmeter 
+  using the function analogRead().
   - If the LED is run too fast, there will not be enough time for all colors to fully light up. If the myTimer.begin(blinkLED, 150000) 
   function is called too fast, and the delay is too long, the blinkLED function will not be executed fully. It will stay at only one
-  color since there is not enough time to run all the color cases in blinkLED function.(the delay can be set at a fix number, or can be 
-  read from the potentialmeter using the function analogRead()).
+  color since there is not enough time to run all the color cases in blinkLED function.
